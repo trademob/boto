@@ -504,6 +504,7 @@ class EmrConnection(AWSQueryConnection):
 
         # Common instance args
         common_params = self._build_instance_common_args(ec2_keyname,
+                                                         ec2_subnet_id,
                                                          availability_zone,
                                                          keep_alive,
                                                          hadoop_version)
