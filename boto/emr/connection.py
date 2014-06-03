@@ -409,7 +409,8 @@ class EmrConnection(AWSQueryConnection):
                     ami_version=None,
                     api_params=None,
                     visible_to_all_users=None,
-                    job_flow_role=None):
+                    job_flow_role=None,
+                    ec2_subnet_id=None):
         """
         Runs a job flow
         :type name: str
@@ -681,7 +682,7 @@ class EmrConnection(AWSQueryConnection):
                 params['%s.Value' % current_prefix] = value
         return params
 
-    def _build_instance_common_args(self, ec2_keyname, availability_zone,
+    def _build_instance_common_args(self, ec2_keyname, ec2_subnet_id, availability_zone,
                                     keep_alive, hadoop_version):
         """
         Takes a number of parameters used when starting a jobflow (as
@@ -696,6 +697,8 @@ class EmrConnection(AWSQueryConnection):
             params['Instances.HadoopVersion'] = hadoop_version
         if ec2_keyname:
             params['Instances.Ec2KeyName'] = ec2_keyname
+        if ec2_subnet_id:
+            params['Instances.Ec2SubnetId'] = ec2_subnet_id
         if availability_zone:
             params['Instances.Placement.AvailabilityZone'] = availability_zone
 
