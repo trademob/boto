@@ -397,7 +397,7 @@ class EmrConnection(AWSQueryConnection):
                                ModifyInstanceGroupsResponse, verb='POST')
 
     def run_jobflow(self, name, log_uri=None, ec2_keyname=None,
-                    availability_zone=None,
+                    availability_zone=None, ec2_subnet_id=None,
                     master_instance_type='m1.small',
                     slave_instance_type='m1.small', num_instances=1,
                     action_on_failure='TERMINATE_JOB_FLOW', keep_alive=False,
@@ -509,6 +509,7 @@ class EmrConnection(AWSQueryConnection):
 
         # Common instance args
         common_params = self._build_instance_common_args(ec2_keyname,
+                                                         ec2_subnet_id,
                                                          availability_zone,
                                                          keep_alive,
                                                          hadoop_version)
@@ -690,7 +691,7 @@ class EmrConnection(AWSQueryConnection):
                 params['%s.Value' % current_prefix] = value
         return params
 
-    def _build_instance_common_args(self, ec2_keyname, availability_zone,
+    def _build_instance_common_args(self, ec2_keyname, ec2_subnet_id, availability_zone,
                                     keep_alive, hadoop_version):
         """
         Takes a number of parameters used when starting a jobflow (as
@@ -707,6 +708,8 @@ class EmrConnection(AWSQueryConnection):
             params['Instances.Ec2KeyName'] = ec2_keyname
         if availability_zone:
             params['Instances.Placement.AvailabilityZone'] = availability_zone
+        if ec2_subnet_id:
+            params['Instances.Ec2SubnetId'] = ec2_subnet_id
 
         return params
 
